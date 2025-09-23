@@ -1,10 +1,6 @@
 ﻿using Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ElektricniMotor
 {
@@ -12,58 +8,49 @@ namespace ElektricniMotor
     {
         private bool aktivnaSesija = false;
 
+        private FileWriter writer;
+
         public string EndSession()
         {
+            if (!aktivnaSesija) return "NACK: No active session";
+
             aktivnaSesija = false;
 
-            return "ACK: session was succesful";
+            writer.Dispose();
+            writer = null;
+
+            return "ACK: session is completed";
         }
 
         public string PushSample(MetaZaglavlje metaZaglavlje)
         {
-            return "ACK: metaZaglavlje was sent";
+            if (!aktivnaSesija) return "NACK: Session is not active";
+
+            if (metaZaglavlje == null) { throw new FaultException<DataFormatFault>(new DataFormatFault("metaZaglavlje is null")); }
+
+            Console.WriteLine("->Transmission in progress");
+
+            writer.SampleWrite(metaZaglavlje);
+
+            return "ACK: metaZaglavlje was recived";
         }
 
         public string StartSession(MetaZaglavlje metaZaglavlje)
         {
+
+            if(metaZaglavlje == null) { throw new FaultException<DataFormatFault>(new DataFormatFault("metaZaglavlje is null")); }
+
+
+            new Validacija().ValidacijaEx(metaZaglavlje);
+
+
+            writer = new FileWriter();
+
             aktivnaSesija = true;
 
             return "ACK: session is started";
         }
 
-        public bool Validacija(MetaZaglavlje metaZaglavlje)
-        {
-            if (metaZaglavlje == null)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault("metaZaglavlje is required"));
 
-            if (metaZaglavlje.Profile_Id <= 0)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault("Profile_Id must be greater than 0!"));
-
-            if (metaZaglavlje.U_q < -1000 || metaZaglavlje.U_q > 1000)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault($"U_q {metaZaglavlje.U_q} out of range (-1000,1000)"));
-
-            if (metaZaglavlje.U_d < -1000 || metaZaglavlje.U_d > 1000)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault($"U_d {metaZaglavlje.U_d} out of range (-1000,1000)"));
-
-            if (metaZaglavlje.Motor_speed < 0)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault("Motor_speed must be >= 0"));
-
-            if (metaZaglavlje.Ambient < -50 || metaZaglavlje.Ambient > 150)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault($"Ambient {metaZaglavlje.Ambient} out of range (-50,150)"));
-
-            if (metaZaglavlje.Torque < -1000 || metaZaglavlje.Torque > 1000)
-                throw new FaultException<ValidationFault>(
-                    new ValidationFault($"Torque {metaZaglavlje.Torque} out of range (-1000,1000)"));
-
-
-
-            return true;
-        }
     }
 }

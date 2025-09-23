@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -13,10 +10,12 @@ namespace Client
 
         private StreamReader reader;
         private bool disposed = false;
+        private Validacija validacija;
 
         public FileReader(string filePath)
         {
             reader = new StreamReader(filePath);
+            validacija = new Validacija();
         }
 
         ~FileReader() { Dispose(false); }
@@ -31,7 +30,7 @@ namespace Client
         {
             if (!disposed)
             {
-                if(reader != null)
+                if (reader != null)
                 {
                     reader.Dispose();
                 }
@@ -49,12 +48,15 @@ namespace Client
 
             string fileLine;
 
-            //ovo nam ovde preksace header i krecemo dalje na podatke
-            reader.ReadLine();
 
-            using(StreamReader reader = new StreamReader(filePath))
+
+            using (StreamReader reader = new StreamReader(filePath))
             {
-                while ((fileLine = reader.ReadLine()) != null) {
+                //ovo nam ovde preksace header i krecemo dalje na podatke
+                reader.ReadLine();
+
+                while ((fileLine = reader.ReadLine()) != null)
+                {
 
                     string[] parts = fileLine.Split(',');
 
@@ -66,16 +68,20 @@ namespace Client
                     int profil_id = Int32.Parse(parts[12]);
                     MetaZaglavlje podaciFile = new MetaZaglavlje(profil_id, u_q, u_d, motor_speed, ambient, torque);
 
-                    if (nmbrRow++ <= 100)
+                    bool isValid = validacija.PokusajValidacija(podaciFile);
+
+                    if (nmbrRow < 100 && isValid == true)
                     {
                         podaci.Add(podaciFile);
+                        nmbrRow++;
                     }
                     else
                     {
                         losiPodaci.Add(podaciFile);
+
                     }
 
-                        nmbrRow++;
+                    
                 }
             }
 

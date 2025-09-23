@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ElektricniMotor
 {
@@ -13,6 +9,12 @@ namespace ElektricniMotor
         {
             ServiceHost svc = new ServiceHost(typeof(ElektricniMotor.MotorServiceContract));
 
+            svc.Open();
+
+            Console.WriteLine("Server is started, press key to close it!");
+            Console.ReadKey();
+
+            svc.Close();
         }
     }
 }

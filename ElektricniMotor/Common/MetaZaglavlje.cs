@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace Common
 {
@@ -43,7 +38,7 @@ namespace Common
 
         public override string ToString()
         {
-            return $"Profile_ID: {Profile_Id} U_q: {U_q} U_d: {U_d} Motor_speed: {Motor_speed} Ambient: {Ambient} Torque: {Torque}";
+            return $"{Profile_Id},{U_d},{U_q},{Ambient},{Motor_speed},{Torque}";
         }
     }
 }
