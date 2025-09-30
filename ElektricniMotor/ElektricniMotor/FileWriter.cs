@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,21 +18,23 @@ namespace ElektricniMotor
 
         public FileWriter() {
 
-            if (File.Exists("measurements_session.csv"))
-            {
-                File.Delete("measurements_session.csv");
-            }
+            var exeDir = AppDomain.CurrentDomain.BaseDirectory;
+            var goodRel = ConfigurationManager.AppSettings["GoodCsv"] ?? @"Data\measurements_session.csv";
+            var badRel = ConfigurationManager.AppSettings["BadCsv"] ?? @"Data\rejects.csv";
 
-            if (File.Exists("rejects.csv"))
-            {
-                File.Delete("rejects.csv");
-            }
+            var goodPath = Path.GetFullPath(Path.IsPathRooted(goodRel) ? goodRel : Path.Combine(exeDir, goodRel));
+            var badPath = Path.GetFullPath(Path.IsPathRooted(badRel) ? badRel : Path.Combine(exeDir, badRel));
+
+            Directory.CreateDirectory(Path.GetDirectoryName(goodPath) ?? exeDir);
+            Directory.CreateDirectory(Path.GetDirectoryName(badPath) ?? exeDir);
+
+            if (File.Exists(goodPath)) File.Delete(goodPath);
+            if (File.Exists(badPath)) File.Delete(badPath);
 
 
             writerGood = new StreamWriter("measurements_session.csv", true);
             writerBad = new StreamWriter("rejects.csv", true);
 
-            //odmah pisem zaglavlje
             writerGood.WriteLine("profile_id,u_d,ambient,motor_speed,torque");
 
             writerBad.WriteLine("profile_id,u_d,ambient,motor_speed,torque");
@@ -41,7 +44,6 @@ namespace ElektricniMotor
         {
             string newLine = metaZaglavlje.ToString();
             
-            //ovo je onaj koji mi govori da sam presao na drugog
             if(metaZaglavlje.Profile_Id == -1)
             {
                 badData = true;

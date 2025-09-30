@@ -14,7 +14,6 @@ namespace Client
 
         public FileReader(string filePath)
         {
-            reader = new StreamReader(filePath);
             validacija = new Validacija();
         }
 
@@ -52,7 +51,6 @@ namespace Client
 
             using (StreamReader reader = new StreamReader(filePath))
             {
-                //ovo nam ovde preksace header i krecemo dalje na podatke
                 reader.ReadLine();
 
                 while ((fileLine = reader.ReadLine()) != null)
