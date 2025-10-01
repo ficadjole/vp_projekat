@@ -1,9 +1,9 @@
 ﻿using Common;
-using ElektricniMotor.Analytics;
-using ElektricniMotor.Events;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using Common.Analytics;
+using Common.Events;
 
 namespace ElektricniMotor
 {

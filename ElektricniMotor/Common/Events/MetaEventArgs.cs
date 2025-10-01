@@ -1,7 +1,7 @@
 ﻿using Common;
 using System;
 
-namespace ElektricniMotor.Events
+namespace Common.Events
 {
     public class MetaEventArgs : EventArgs
     {

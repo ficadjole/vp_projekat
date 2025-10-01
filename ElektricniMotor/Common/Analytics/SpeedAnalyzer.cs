@@ -1,12 +1,12 @@
 ﻿using Common;
-using ElektricniMotor.Events;
+using Common.Events;
 using System;
 using System.Collections.Generic;
-using System.Configuration;  // može ostati
-using System.Globalization;  // može ostati
+using System.Configuration;  
+using System.Globalization; 
 using System.Linq;
 
-namespace ElektricniMotor.Analytics
+namespace Common.Analytics
 {
     public class SpeedReading
     {

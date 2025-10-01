@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime.Serialization" />
@@ -58,7 +59,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analytics\ConfigRead.cs" />
+    <Compile Include="Analytics\SpeedAnalyzer.cs" />
+    <Compile Include="Analytics\VoltAnalyzer.cs" />
     <Compile Include="CustomException.cs" />
+    <Compile Include="Events\Directions.cs" />
+    <Compile Include="Events\MetaEventArgs.cs" />
+    <Compile Include="Events\OutOfBandWarningEventArgs.cs" />
+    <Compile Include="Events\SpeedSpikedEventArgs.cs" />
+    <Compile Include="Events\TransferEventArgs.cs" />
+    <Compile Include="Events\VoltageSpikeEventArgs.cs" />
+    <Compile Include="Events\WarningEventArgs.cs" />
     <Compile Include="IMotorServiceContract.cs" />
     <Compile Include="MetaZaglavlje.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

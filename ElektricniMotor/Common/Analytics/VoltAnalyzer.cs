@@ -1,12 +1,12 @@
 ﻿using Common;
-using ElektricniMotor.Events;
+using Common.Events;
 using System;
 using System.Collections.Generic;
-using System.Configuration;   // može ostati
-using System.Globalization;   // može ostati
+using System.Configuration;   
+using System.Globalization;   
 using System.Linq;
 
-namespace ElektricniMotor.Analytics
+namespace Common.Analytics
 {
     public class VoltageReading
     {
@@ -77,13 +77,11 @@ namespace ElektricniMotor.Analytics
 
                 var prev = samples[i - 1];
 
-                // ΔUq
                 double dUq = s.U_q - prev.U_q;
                 double aUq = Math.Abs(dUq);
                 Console.WriteLine($"Sample {i}: Uq={s.U_q:F4}, ΔUq={dUq:F6} (|Δ|={aUq:F6})");
                 if (aUq > uqThreshold) RaiseSpike(prev, s, "Uq", dUq, aUq, uqThreshold);
 
-                // ΔUd
                 double dUd = s.U_d - prev.U_d;
                 double aUd = Math.Abs(dUd);
                 Console.WriteLine($"           Ud={s.U_d:F4}, ΔUd={dUd:F6} (|Δ|={aUd:F6})");
@@ -93,7 +91,6 @@ namespace ElektricniMotor.Analytics
             LogSummary(samples);
         }
 
-        // Real-time analiza (jedan sample po pozivu)
         public void AnalyzeSingleSample(MetaZaglavlje sample)
         {
             var previous = voltageHistory.LastOrDefault();
@@ -122,13 +119,12 @@ namespace ElektricniMotor.Analytics
                 torque: sample.Torque
             );
 
-            // ΔUq
             double dUq = sample.U_q - previous.Uq;
             double aUq = Math.Abs(dUq);
             Console.WriteLine($"Real-time: Uq={sample.U_q:F4}, ΔUq={dUq:F6}");
             if (aUq > uqThreshold) RaiseSpike(prevSample, sample, "Uq", dUq, aUq, uqThreshold);
 
-            // ΔUd
+
             double dUd = sample.U_d - previous.Ud;
             double aUd = Math.Abs(dUd);
             Console.WriteLine($"           Ud={sample.U_d:F4}, ΔUd={dUd:F6}");

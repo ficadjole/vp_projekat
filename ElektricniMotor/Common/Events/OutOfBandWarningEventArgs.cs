@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ElektricniMotor.Events
+namespace Common.Events
 {
     public class OutOfBandWarningEventArgs : EventArgs
     {
